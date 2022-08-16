@@ -1,3 +1,4 @@
+from enum import unique
 from tkinter import N
 from typing import Union
 
@@ -11,7 +12,7 @@ app = FastAPI()
 class category(BaseModel):
     id: int
     title: str
-    canon: bool
+    canon: bool = False
 
 class categories(BaseModel):
     categories: list[category]
@@ -23,7 +24,7 @@ def categories_list(queries: UserQueries = Depends()):
         "categories": queries.get_all_categories(page=0)
     }
 
-@app.post("/api/categories")
+@app.post("/api/categories", response_model = category)
 def create_item(category: category):
     return category
 
@@ -32,3 +33,11 @@ def categories_page_list(queries: UserQueries = Depends(), N : int = 0):
     return {
         "categories": queries.get_all_categories(page=N)
     }
+
+@app.put("/api/categories/{id}", response_model = category)
+def category_details(category: category):
+    return category
+
+@app.delete("/api/categories/{id}", response_model = category)
+def category_details(category: category):
+    return category
