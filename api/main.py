@@ -1,8 +1,5 @@
-from enum import unique
-from tkinter import N
-from typing import Union
-
 from fastapi import FastAPI, Depends
+from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 
 from db import UserQueries
@@ -35,9 +32,17 @@ def categories_page_list(queries: UserQueries = Depends(), N : int = 0):
     }
 
 @app.put("/api/categories/{id}", response_model = category)
-def category_details(category: category):
-    return category
-
-@app.delete("/api/categories/{id}", response_model = category)
-def category_details(category: category):
-    return category
+def category_update(id: int, titl: str, category: UserQueries = Depends()):
+    return {"deleted": category.update_category(ident = id, title = titl)}
+# def category_details(id: int, Category: UserQueries = Depends()):
+#     # stored_category_data = categories[id]
+#     # stored_category_model = category(**stored_category_data)
+#     # udate_data = Category.dictxclude_unset = True)
+#     # updated_category  = stored_category_model.copy(update = update_data)
+#     updated_category = jsonable_encoder(Category.get_category())
+#     Category.get_category()[id] = updated_category
+#     return updated_category
+# 
+@app.delete("/api/categories/{id}", response_model = categories)
+def category_delete(category: UserQueries = Depends(), id: int = 0):
+    return {"categories":category.get_category(ident = id)}

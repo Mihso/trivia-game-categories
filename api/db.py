@@ -19,7 +19,7 @@ class UserQueries:
                 """
                 query += f"OFFSET {page*100}"
                 if num_results and type(num_results) == int:
-                    query += f"LIMIT {num_results+ (page*100)}"
+                    query += f"LIMIT {100}"
                 cur.execute(query)
 
                 results = []
@@ -30,3 +30,24 @@ class UserQueries:
                     results.append(record)
 
                 return results
+
+    def update_category(self,title, ident):
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                query = """
+                UPDATE categories
+                """
+                query += f"SET title = {title}"
+                query += f"WHERE if = {ident}"
+
+                cur.execute(query)
+
+                results = []
+                for row in cur.fetchall():
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        record[column.name] = row[i]
+                    results.append(record)
+                return results
+    def delete_category(self, ident):
+        pool.query()
